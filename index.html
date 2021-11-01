@@ -1,0 +1,30 @@
+<html>
+    <head>
+        <title>Othello AI</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="css/canvas.css">
+        <link rel="stylesheet" href="css/controls.css">
+        <link rel="stylesheet" href="css/nav.css">
+        <link rel='icon' href='images/favicon.ico'>
+    </head>
+    <body>
+        
+        <nav id="navbar" class="navbar navbar-dark bg-dark p-1">
+            <div class="container-fluid">
+                <a class="navbar-brand ms-2 nav-title">Othello AI</a>
+                <div class="navbar-nav">
+                    <a class="nav-link me-2" href="https://github.com/BSmith156/Othello-AI" target="_blank"><img class="nav-img" src="images/github.svg" alt="GitHub logo"></a>
+                </div>
+            </div>
+        </nav>
+
+        <div id="controls" class="form-group controls-container m-3 p-4">
+            <h2 id="turn" class="turn mb-3">Black's Turn</h2>
+            <button id="restart" class="btn btn-danger" style="width: 100%">Restart</button>
+        </div>
+
+        <canvas id="canvas" class="canvas m-3 ml-0"></canvas>
+
+    </body>
+    <script type="module" src="js/main.js"></script>
+</html>
