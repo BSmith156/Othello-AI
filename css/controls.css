@@ -12,3 +12,13 @@
     text-align: center;
     font-weight: bold;
 }
+
+.title {
+    text-align: center;
+    text-decoration: underline;
+}
+
+.subtitle {
+    display: block;
+    text-decoration: underline;
+}

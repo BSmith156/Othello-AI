@@ -13,6 +13,7 @@ export function Board() {
     this.board[4][4] = 1;
     this.board[3][4] = -1;
     this.board[4][3] = -1;
+    this.currentPlayer = -1;
 };
 
 Board.prototype.resize = function() {
@@ -58,7 +59,7 @@ Board.prototype.draw = function() {
     ctx.stroke();
 };
 
-Board.prototype.move = function(x, y, piece) {
+Board.prototype.move = function(x, y) {
     for(let xDir = -1; xDir < 2; xDir++) {
         for(let yDir = -1; yDir < 2; yDir++) {
             let currentX = x + xDir;
@@ -67,7 +68,7 @@ Board.prototype.move = function(x, y, piece) {
             while(currentX > -1 && currentY > -1 && currentX < 8 && currentY < 8) {
                 if(this.board[currentY][currentX] == 0) {
                     break;
-                } else if(this.board[currentY][currentX] == piece) {
+                } else if(this.board[currentY][currentX] == this.currentPlayer) {
                     for(let i = 0; i < flipped.length; i++) {
                         this.board[flipped[i][1]][flipped[i][0]] *= -1;
                     };
@@ -79,10 +80,11 @@ Board.prototype.move = function(x, y, piece) {
             };
         };
     };
-    this.board[y][x] = piece;
+    this.board[y][x] = this.currentPlayer;
+    this.currentPlayer *= -1;
 };
 
-Board.prototype.isLegalMove = function(x, y, piece) {
+Board.prototype.isLegalMove = function(x, y) {
     if(this.board[y][x] != 0) {
         return false;
     };
@@ -94,9 +96,9 @@ Board.prototype.isLegalMove = function(x, y, piece) {
             while(currentX > -1 && currentY > -1 && currentX < 8 && currentY < 8) {
                 if(this.board[currentY][currentX] == 0) {
                     break;
-                } else if(this.board[currentY][currentX] == -piece) {
+                } else if(this.board[currentY][currentX] == -this.currentPlayer) {
                     otherFound = true;
-                } else if(this.board[currentY][currentX] == piece) {
+                } else if(this.board[currentY][currentX] == this.currentPlayer) {
                     if(otherFound) {
                         return true;
                     };
@@ -110,11 +112,11 @@ Board.prototype.isLegalMove = function(x, y, piece) {
     return false;
 };
 
-Board.prototype.getLegalMoves = function(piece) {
+Board.prototype.getLegalMoves = function() {
     let moves = []
     for(let y = 0; y < 8; y++) {
         for(let x = 0; x < 8; x++) {
-            if(this.isLegalMove(x, y, piece)) {
+            if(this.isLegalMove(x, y)) {
                 moves.push([x, y]);
             };
         };

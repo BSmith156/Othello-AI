@@ -1,20 +1,28 @@
 import { Board } from "./board.js";
 import { getMousePosition } from "./helpers.js";
+import { AIMove } from "./ai.js";
 
 const ctx = document.getElementById("canvas").getContext("2d");
 const turn = document.getElementById("turn");
+const blackAIInput = document.getElementById("blackType");
+const whiteAIInput = document.getElementById("whiteType");
+const blackDepthInput = document.getElementById("blackDepth");
+const whiteDepthInput = document.getElementById("whiteDepth");
 
 export function Game() {
     this.board = new Board();
-    this.currentPlayer = -1;
     this.currentSquare = null;
     this.legalMoves = this.board.getLegalMoves(this.currentPlayer);
     turn.innerHTML = "Black's Turn";
+    this.setDepth(true);
+    this.setDepth(false);
+    this.setAI(true);
+    this.setAI(false);
 };
 
 Game.prototype.draw = function() {
     this.board.draw();
-    if(this.currentPlayer == 1) {
+    if(this.board.currentPlayer == 1) {
         ctx.strokeStyle = "#FFFFFF";
     } else {
         ctx.strokeStyle = "#000000";
@@ -33,13 +41,12 @@ Game.prototype.draw = function() {
 };
 
 Game.prototype.makeMove = function(x, y) {
-    if(this.board.isLegalMove(x, y, this.currentPlayer)) {
-        this.board.move(x, y, this.currentPlayer);
-        this.currentPlayer *= -1;
-        this.legalMoves = this.board.getLegalMoves(this.currentPlayer);
+    if(this.board.isLegalMove(x, y)) {
+        this.board.move(x, y);
+        this.legalMoves = this.board.getLegalMoves();
         if(this.legalMoves.length == 0) {
-            this.currentPlayer *= -1;
-            this.legalMoves = this.board.getLegalMoves(this.currentPlayer);
+            this.board.currentPlayer *= -1;
+            this.legalMoves = this.board.getLegalMoves();
         };
         if(this.legalMoves.length == 0) {
             let count = 0;
@@ -48,7 +55,6 @@ Game.prototype.makeMove = function(x, y) {
                     count += this.board.board[y][x];
                 };
             };
-            console.log(count);
             if(count > 0) {
                 turn.innerHTML = "White Wins";
             } else if(count < 0) {
@@ -57,12 +63,19 @@ Game.prototype.makeMove = function(x, y) {
                 turn.innerHTML = "Draw";
             };
         } else {
-            if(this.currentPlayer == 1) {
+            if(this.board.currentPlayer == 1) {
                 turn.innerHTML = "White's Turn";
             } else {
                 turn.innerHTML = "Black's Turn";
             };
         };
+        if(this.board.currentPlayer == 1 && this.whiteAI) {
+            this.draw();
+            setTimeout(() => {AIMove(this, this.whiteDepth);}, 100);
+        } else if(this.board.currentPlayer == -1 && this.blackAI) {
+            this.draw();
+            setTimeout(() => {AIMove(this, this.blackDepth);}, 100);
+        }
     };
 };
 
@@ -81,7 +94,49 @@ Game.prototype.onMouseMove = function(event) {
 };
 
 Game.prototype.onMouseClick = function(event) {
+    if(this.board.currentPlayer == 1 && this.whiteAI) {
+        return;
+    }
+    if(this.board.currentPlayer == -1 && this.blackAI) {
+        return;
+    }
     if(event.button == 0 && this.currentSquare != null) {
         this.makeMove(this.currentSquare[0], this.currentSquare[1]);
+    };
+};
+
+Game.prototype.setAI = function(black) {
+    if(black) {
+        this.blackAI = blackAIInput.checked;
+        if(this.board.currentPlayer == -1 && this.blackAI) {
+            AIMove(this, this.blackDepth);
+        }
+    } else {
+        this.whiteAI = whiteAIInput.checked;
+        if(this.board.currentPlayer == 1 && this.whiteAI) {
+            AIMove(this, this.blackDepth);
+        }
+    };
+}
+
+Game.prototype.setDepth = function(black) {
+    let value;
+    if(black) {
+        value = blackDepthInput.value;
+    } else {
+        value = whiteDepthInput.value;
+    }
+    if(!isNaN(value) && value != "") {
+        value = Number.parseInt(value);
+        if(value < 1) {
+            value = 1;
+        } else if (value > 9) {
+            value = 9;
+        };
+        if(black) {
+            this.blackDepth = value;
+        } else {
+            this.whiteDepth = value;
+        };
     };
 };

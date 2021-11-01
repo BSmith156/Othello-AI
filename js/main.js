@@ -1,12 +1,17 @@
-import { Board } from "./board.js";
 import { Game } from "./game.js";
 import { onResize } from "./resize.js";
+
+const blackAIInput = document.getElementById("blackType");
+const whiteAIInput = document.getElementById("whiteType");
+const blackDepthInput = document.getElementById("blackDepth");
+const whiteDepthInput = document.getElementById("whiteDepth");
 
 let game = new Game();
 
 window.onload = () => {
     onResize();
     game.board.resize();
+    setGameListeners();
     setInterval(step, 1000 / 30); 
 };
 
@@ -17,17 +22,28 @@ window.onresize = () => {
 
 function step() {
     game.draw();
-}
-
-canvas.addEventListener("mousemove", function(e) {
-    game.onMouseMove(e);
-});
-
-canvas.addEventListener("mousedown", function(e) {
-    game.onMouseClick(e);
-});
+};
 
 document.getElementById("restart").addEventListener("click", () => {
     game = new Game();
     game.board.resize();
+    setGameListeners();
 });
+
+function setGameListeners() {
+
+    canvas.addEventListener("mousemove", function(e) {
+        game.onMouseMove(e);
+    });
+    
+    canvas.addEventListener("mousedown", function(e) {
+        game.onMouseClick(e);
+    });
+
+    blackAIInput.addEventListener("change", () => game.setAI(true));
+    whiteAIInput.addEventListener("change", () => game.setAI(false));
+    blackDepthInput.addEventListener("input", () => game.setDepth(true));
+    blackDepthInput.addEventListener("focusout", () => {blackDepthInput.value = game.blackDepth});
+    whiteDepthInput.addEventListener("input", () => game.setDepth(false));
+    whiteDepthInput.addEventListener("focusout", () => {whiteDepthInput.value = game.whiteDepth});
+};
