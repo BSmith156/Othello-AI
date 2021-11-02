@@ -1,5 +1,7 @@
 import { Game } from "./game.js";
+import { helpNext } from "./help.js";
 import { onResize } from "./resize.js";
+
 
 const blackAIInput = document.getElementById("blackType");
 const whiteAIInput = document.getElementById("whiteType");
@@ -9,6 +11,7 @@ const whiteDepthInput = document.getElementById("whiteDepth");
 let game = new Game();
 
 window.onload = () => {
+    helpNext();
     onResize();
     game.board.resize();
     setGameListeners();

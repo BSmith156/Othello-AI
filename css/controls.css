@@ -22,3 +22,7 @@
     display: block;
     text-decoration: underline;
 }
+
+.text {
+    text-align: center;
+}
