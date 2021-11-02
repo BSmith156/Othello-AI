@@ -9,7 +9,7 @@ const whiteAIInput = document.getElementById("whiteType");
 const blackDepthInput = document.getElementById("blackDepth");
 const whiteDepthInput = document.getElementById("whiteDepth");
 
-export function Game() {
+export function Game(gameCount) {
     this.board = new Board();
     this.currentSquare = null;
     this.legalMoves = this.board.getLegalMoves(this.currentPlayer);
@@ -18,7 +18,7 @@ export function Game() {
     this.setDepth(false);
     this.setAI(true);
     this.setAI(false);
-    this.restartBlock = false;
+    this.dead = false;
 };
 
 Game.prototype.draw = function() {
@@ -42,6 +42,9 @@ Game.prototype.draw = function() {
 };
 
 Game.prototype.makeMove = function(x, y) {
+    if(this.dead) {
+        return;
+    };
     if(this.board.isLegalMove(x, y)) {
         this.board.move(x, y);
         this.legalMoves = this.board.getLegalMoves();
@@ -72,12 +75,10 @@ Game.prototype.makeMove = function(x, y) {
         };
         if(this.board.currentPlayer == 1 && this.whiteAI) {
             this.draw();
-            this.restartBlock = true;
-            setTimeout(() => {this.restartBlock = false; AIMove(this, this.whiteDepth);}, 100);
+            setTimeout(() => {if(this.whiteAI){AIMove(this, this.whiteDepth);}}, 100);
         } else if(this.board.currentPlayer == -1 && this.blackAI) {
             this.draw();
-            this.restartBlock = true;
-            setTimeout(() => {this.restartBlock = false; AIMove(this, this.blackDepth);}, 100);
+            setTimeout(() => {if(this.blackAI){AIMove(this, this.blackDepth);}}, 100);
         }
     };
 };

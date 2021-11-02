@@ -25,11 +25,10 @@ function step() {
 };
 
 document.getElementById("restart").addEventListener("click", () => {
-    if(!game.restartBlock) {
-        game = new Game();
-        game.board.resize();
-        setGameListeners();
-    };
+    game.dead = true;
+    game = new Game();
+    game.board.resize();
+    setGameListeners();
 });
 
 function setGameListeners() {
