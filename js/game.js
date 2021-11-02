@@ -18,6 +18,7 @@ export function Game() {
     this.setDepth(false);
     this.setAI(true);
     this.setAI(false);
+    this.restartBlock = false;
 };
 
 Game.prototype.draw = function() {
@@ -71,10 +72,12 @@ Game.prototype.makeMove = function(x, y) {
         };
         if(this.board.currentPlayer == 1 && this.whiteAI) {
             this.draw();
-            setTimeout(() => {AIMove(this, this.whiteDepth);}, 100);
+            this.restartBlock = true;
+            setTimeout(() => {this.restartBlock = false; AIMove(this, this.whiteDepth);}, 100);
         } else if(this.board.currentPlayer == -1 && this.blackAI) {
             this.draw();
-            setTimeout(() => {AIMove(this, this.blackDepth);}, 100);
+            this.restartBlock = true;
+            setTimeout(() => {this.restartBlock = false; AIMove(this, this.blackDepth);}, 100);
         }
     };
 };
